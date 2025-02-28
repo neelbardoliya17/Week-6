@@ -1,0 +1,80 @@
+enum Role
+{
+    ADMIN
+    USER
+}
+
+type User{
+    id:ID!
+    name:String!
+    email:String!
+    role:Role!
+    tasks:[Task]
+}
+
+type Task{
+    id:ID!
+    title:String!
+    desc:String!
+    comepleted:Boolean!
+    user:User!
+}
+
+type Payload{
+    token:String!
+    user:User!  
+}
+
+input createUserInput
+{
+    name:String!
+    email:String!
+    password:String!
+    role:Role!
+}
+
+input logingUserInput
+{
+    email:String!
+    password:String!
+}
+
+input updateUserInput
+{
+    name:String
+    email:String
+    role:Role
+}
+
+input createTaskInput
+{
+    title:String!
+    desc:String!
+}
+
+input updateTaskInput
+{
+    title:String
+    desc:String!
+    completed:Boolean
+}
+
+type Query
+{
+    getUsers:[User]
+    getUser(id:ID!):User
+    getTasks:[Task]
+    getUserTasks(userId:ID!):[Task]
+}
+
+type Mutation
+{
+    createUser(input:createUserInput):User
+    loginUser(input:logingUserInput):Payload
+    updateUser(id:ID!,input:updateUserInput):User
+    deleteUser(id:ID!):String
+
+    createTask(input:createTaskInput):Task
+    updateTask(id:ID!,input:updateTaskInput):Task
+    deleteTask(id:ID!):String
+}
