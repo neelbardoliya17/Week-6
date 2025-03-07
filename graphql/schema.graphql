@@ -16,13 +16,29 @@ type Task{
     id:ID!
     title:String!
     desc:String!
-    comepleted:Boolean!
+    completed:Boolean!
     user:User!
 }
 
 type Payload{
+    success:Boolean!
+    message:String!
     token:String!
     user:User!  
+}
+type UserResponse{
+    success:Boolean!
+    message:String!
+    data:[User]
+}
+type TaskResponse{
+    success:Boolean!
+    message:String!
+    data:[Task]
+}
+type ReponseMessage{
+    success:Boolean!
+    message:String!
 }
 
 input createUserInput
@@ -48,6 +64,7 @@ input updateUserInput
 
 input createTaskInput
 {
+
     title:String!
     desc:String!
 }
@@ -55,26 +72,51 @@ input createTaskInput
 input updateTaskInput
 {
     title:String
-    desc:String!
+    desc:String
     completed:Boolean
 }
-
+input TaskFilterInput
+{
+    id_in:[ID]
+    userId:[ID]
+    completed:Boolean
+    title_contains:String
+    desc_contains:String
+}
+input UserFilterInput
+{
+    id_in:[ID]
+    role:Role
+    name_contains:String
+    email_contains:String
+}
+enum SortOrder{
+    asc
+    desc
+}
+input UserOrderBy{
+    name:SortOrder
+    email:SortOrder
+}
+input TaskOrderBy{
+    title:SortOrder
+    desc:SortOrder
+    completed:SortOrder
+}
 type Query
 {
-    getUsers:[User]
-    getUser(id:ID!):User
-    getTasks:[Task]
-    getUserTasks(userId:ID!):[Task]
+    getUsers(where:UserFilterInput,orderBy:UserOrderBy,limit:Int,offset:Int):UserResponse
+    getTasks(where:TaskFilterInput,orderBy:TaskOrderBy,limit:Int,offset:Int):TaskResponse
 }
 
 type Mutation
 {
-    createUser(input:createUserInput):User
+    createUser(input:createUserInput):UserResponse
     loginUser(input:logingUserInput):Payload
-    updateUser(id:ID!,input:updateUserInput):User
-    deleteUser(id:ID!):String
+    updateUser(id:ID!,input:updateUserInput):UserResponse
+    deleteUser(id:ID!):ReponseMessage   
 
-    createTask(input:createTaskInput):Task
-    updateTask(id:ID!,input:updateTaskInput):Task
-    deleteTask(id:ID!):String
+    createTask(input:createTaskInput):TaskResponse
+    updateTask(id:ID!,input:updateTaskInput):TaskResponse
+    deleteTask(id:ID!):ReponseMessage
 }

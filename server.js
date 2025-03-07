@@ -5,6 +5,9 @@ import bodyParser from "body-parser";
 import  typeDefs  from "./graphql/schemas/typeDefs.js";
 import { userResolvers } from "./graphql/resolvers/userResolvers.js";
 import { taskResolvers } from "./graphql/resolvers/taskResolvers.js";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 const app = express();
 const server = new ApolloServer({
@@ -12,6 +15,12 @@ const server = new ApolloServer({
   resolvers: [userResolvers, taskResolvers],
   context: ({ req }) => ({ req }),
 });
+
+// (async function  (params) {
+//   const data=await prisma.task.findMany();
+//   console.log(data);
+  
+// })();
 
 await server.start();
 app.use(bodyParser.json());
